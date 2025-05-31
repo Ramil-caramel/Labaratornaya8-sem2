@@ -1,8 +1,28 @@
 #pragma once
 #include <functional>
 
-template <class It, class Out, class Compare=std::less<>>
-Out merge(It first1, It last1, It first2, It last2, Out out, Compare cmp=Compare{}); // 1
+// 1
+template <class It, class Out, class Compare = std::less<>>
+Out merge(It first1, It last1, It first2, It last2, Out out, Compare cmp = Compare{}) {
+    while (first1 != last1 && first2 != last2) {
+        if (cmp(*first2, *first1)) {
+            *out++ = *first2++;
+        } else {
+            *out++ = *first1++;
+        }
+    }
+
+    while (first1 != last1) {
+        *out++ = *first1++;
+    }
+
+    while (first2 != last2) {
+        *out++ = *first2++;
+    }
+
+    return out;
+}
+
 
 template <class It, class Out, class Compare=std::less<>>
 Out merge_sort(It first, It last, Out out, Compare cmp=Compare{}); // 2
