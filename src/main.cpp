@@ -12,7 +12,19 @@ int main(){
 
     
     for (int x : c) {
-        std::cout << x << " " << std::endl;
+        std::cout << x << " ";
     }
+    std::cout << std::endl;
+
+
+    std::vector<int> unsorted = {9, 1, 3, 8, 2, 7};
+    std::vector<int> sorted(unsorted.size());
+
+    merge_sort(unsorted.begin(), unsorted.end(), sorted.begin());
+
+    for (int x : sorted) {
+        std::cout << x << " ";
+    }
+    std::cout << std::endl;
 
 }

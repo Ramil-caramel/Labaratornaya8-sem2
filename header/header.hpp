@@ -23,12 +23,53 @@ Out merge(It first1, It last1, It first2, It last2, Out out, Compare cmp = Compa
     return out;
 }
 
-
+ // 2
 template <class It, class Out, class Compare=std::less<>>
-Out merge_sort(It first, It last, Out out, Compare cmp=Compare{}); // 2
+Out merge_sort(It first, It last, Out out, Compare cmp = Compare{}) {
+    int size = std::distance(first, last);
+    if (size <= 1) {
+        while (first != last) {
+            *out++ = *first++;
+        }
+        return out;
+    }
 
+    // считаем середину вручную (двигаем итератор на size / 2 шагов)
+    It mid = first;
+    for (int i = 0; i < size / 2; ++i) {
+        ++mid;
+    }
+
+    // копируем левую и правую части в обычные векторы
+    std::vector<int> left;
+    std::vector<int> right;
+
+    // Копируем в left
+    for (It it = first; it != mid; ++it) {
+        left.push_back(*it);
+    }
+
+    // Копируем в right
+    for (It it = mid; it != last; ++it) {
+        right.push_back(*it);
+    }
+
+    // Рекурсивная сортировка
+    std::vector<int> sorted_left;
+    std::vector<int> sorted_right;
+
+    merge_sort(left.begin(), left.end(), std::back_inserter(sorted_left), cmp);
+    merge_sort(right.begin(), right.end(), std::back_inserter(sorted_right), cmp);
+
+    // Слияние
+    return merge(sorted_left.begin(), sorted_left.end(),
+                 sorted_right.begin(), sorted_right.end(), out, cmp);
+}
+// 3
 template <class It, class Compare=std::less<>>
-void inplace_merge_sort(It first, It last, Compare cmp=Compare{}); // 3
+void inplace_merge_sort(It first, It last, Compare cmp=Compare{}){
+
+}
 
 template<class It, class Compare=std::less<>>
 void heap_sort(It first, It last, Compare cmp=Compare{}); // 4
