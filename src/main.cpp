@@ -21,8 +21,10 @@ int main(){
     std::vector<int> sorted(unsorted.size());
 
     //merge_sort(unsorted.begin(), unsorted.end(), sorted.begin());
-    inplace_merge_sort(unsorted.begin(), unsorted.end());
+    //inplace_merge_sort(unsorted.begin(), unsorted.end());
     //insertion_sort(unsorted.begin(), unsorted.end());
+    heap_sort(unsorted.begin(), unsorted.end());
+    //quick_sort(unsorted.begin(), unsorted.end());
 
     for (int x : unsorted) {
         std::cout << x << " ";

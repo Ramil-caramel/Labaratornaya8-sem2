@@ -34,34 +34,28 @@ Out merge_sort(It first, It last, Out out, Compare cmp = Compare{}) {
         return out;
     }
 
-    // считаем середину вручную (двигаем итератор на size / 2 шагов)
     It mid = first;
     for (int i = 0; i < size / 2; ++i) {
         ++mid;
     }
 
-    // копируем левую и правую части в обычные векторы
     std::vector<int> left;
     std::vector<int> right;
 
-    // Копируем в left
     for (It it = first; it != mid; ++it) {
         left.push_back(*it);
     }
 
-    // Копируем в right
     for (It it = mid; it != last; ++it) {
         right.push_back(*it);
     }
 
-    // Рекурсивная сортировка
     std::vector<int> sorted_left;
     std::vector<int> sorted_right;
 
     merge_sort(left.begin(), left.end(), std::back_inserter(sorted_left), cmp);
     merge_sort(right.begin(), right.end(), std::back_inserter(sorted_right), cmp);
 
-    // Слияние
     return merge(sorted_left.begin(), sorted_left.end(),
                  sorted_right.begin(), sorted_right.end(), out, cmp);
 }
@@ -76,7 +70,7 @@ void inplace_merge_sort(It first, It last, Compare cmp=Compare{}){
             if (!cmp(*right, *left)) {
                 ++left;
             } else {
-                // Найти, куда вставить элемент right
+                
                 auto value = *right;
                 It it = right;
                 while (it != left) {
@@ -102,12 +96,69 @@ void inplace_merge_sort(It first, It last, Compare cmp=Compare{}){
 
     sort(sort, first, last);
 }
+//4
+template <class It, class Compare = std::less<>>
+void heap_sort(It first, It last, Compare cmp = Compare{}) {
+    int n = last - first;
 
-template<class It, class Compare=std::less<>>
-void heap_sort(It first, It last, Compare cmp=Compare{}); // 4
+    auto heapify = [&](int i, int heap_size, auto& heapify_ref) -> void {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
 
-template <class It, class Compare=std::less<>>
-void quick_sort(It first, It last, Compare cmp=Compare{}); // 5
+        if (left < heap_size && cmp(first[largest], first[left])) {
+            largest = left;
+        }
+        if (right < heap_size && cmp(first[largest], first[right])) {
+            largest = right;
+        }
+
+        if (largest != i) {
+            auto temp = first[i];
+            first[i] = first[largest];
+            first[largest] = temp;
+
+            heapify_ref(largest, heap_size, heapify_ref);
+        }
+    };
+
+    for (int i = n / 2 - 1; i >= 0; --i) {
+        heapify(i, n, heapify);
+    }
+
+    for (int i = n - 1; i > 0; --i) {
+        auto temp = first[0];
+        first[0] = first[i];
+        first[i] = temp;
+
+        heapify(0, i, heapify);
+    }
+}
+//5
+template <class It, class Compare = std::less<>>
+void quick_sort(It first, It last, Compare cmp = Compare{}) {
+    if (last - first <= 1) return;
+
+    It pivot_it = last - 1;
+    auto pivot = *pivot_it;
+
+    It i = first;
+    for (It j = first; j != pivot_it; ++j) {
+        if (cmp(*j, pivot)) {
+            auto temp = *i;
+            *i = *j;
+            *j = temp;
+            ++i;
+        }
+    }
+
+    auto temp = *i;
+    *i = *pivot_it;
+    *pivot_it = temp;
+
+    quick_sort(first, i, cmp);   
+    quick_sort(i + 1, last, cmp); 
+}
 // 6
 template <class It, class Compare=std::less<>>
 void insertion_sort(It first, It last, Compare cmp=Compare{}){
