@@ -17,12 +17,14 @@ int main(){
     std::cout << std::endl;
 
 
-    std::vector<int> unsorted = {9, 1, 3, 8, 2, 7};
+    std::vector<int> unsorted = {9, 1, 3, 8, 2, 7, 10, 50, 44, -6};
     std::vector<int> sorted(unsorted.size());
 
-    merge_sort(unsorted.begin(), unsorted.end(), sorted.begin());
+    //merge_sort(unsorted.begin(), unsorted.end(), sorted.begin());
+    inplace_merge_sort(unsorted.begin(), unsorted.end());
+    //insertion_sort(unsorted.begin(), unsorted.end());
 
-    for (int x : sorted) {
+    for (int x : unsorted) {
         std::cout << x << " ";
     }
     std::cout << std::endl;

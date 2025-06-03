@@ -68,7 +68,39 @@ Out merge_sort(It first, It last, Out out, Compare cmp = Compare{}) {
 // 3
 template <class It, class Compare=std::less<>>
 void inplace_merge_sort(It first, It last, Compare cmp=Compare{}){
+    auto inplace_merge = [&](It begin, It mid, It end) {
+        It left = begin;
+        It right = mid;
 
+        while (left < right && right < end) {
+            if (!cmp(*right, *left)) {
+                ++left;
+            } else {
+                // Найти, куда вставить элемент right
+                auto value = *right;
+                It it = right;
+                while (it != left) {
+                    *it = *(it - 1);
+                    --it;
+                }
+                *left = value;
+
+                ++left;
+                ++right;
+            }
+        }
+    };
+
+    auto sort = [&](auto& self, It start, It end) -> void {
+        if (end - start <= 1) return;
+
+        It mid = start + (end - start) / 2;
+        self(self, start, mid);
+        self(self, mid, end);
+        inplace_merge(start, mid, end);
+    };
+
+    sort(sort, first, last);
 }
 
 template<class It, class Compare=std::less<>>
@@ -76,6 +108,14 @@ void heap_sort(It first, It last, Compare cmp=Compare{}); // 4
 
 template <class It, class Compare=std::less<>>
 void quick_sort(It first, It last, Compare cmp=Compare{}); // 5
-
+// 6
 template <class It, class Compare=std::less<>>
-void insertion_sort(It first, It last, Compare cmp=Compare{}); // 6
+void insertion_sort(It first, It last, Compare cmp=Compare{}){
+    for (It i = first; i != last; ++i) {
+        It j = i;
+        while (j != first && cmp(*j, *(j - 1))) {
+            std::iter_swap(j, j - 1);
+            --j;
+        }
+    }
+}
